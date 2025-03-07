@@ -1,35 +1,81 @@
-document.getElementById("dice").addEventListener("click", function() {
-    let dice = this;
-    dice.classList.add("rolling");
-
-    setTimeout(() => {
-        let number = Math.floor(Math.random() * 20) + 1;
-        let messages = {
-            1:  "Empório Daruma",
-            2:  "Café barão",
-            3:  "Charlotte",
-            4:  "Casa Bauducco Banco do Brasil",
-            5:  "The coffee",
-            6:  "Starbucks :/",
-            7:  "Kopenhagen",
-            8:  "Café Perseu",
-            9:  "Urbe Café",
-            10: "Gorinhamez",
-            11: "Café na SPTech :(",
-            12: "Café amigão",
-            13: "MASP",
-            14: "Tostado café club",
-            15: "Café cinema conjunto nacional",
-            16: "Café cinema augusta",
-            17: "Cacau show conjunto nacional",
-            18: "Sterna café habitat Bradesco",
-            19: "Ofner center 3",
-            20: "Rei do mate augusta"
-        };
-        let message = `Onde iremos hoje? ${messages[number]}.`;
-
-        dice.classList.remove("rolling");
-        dice.innerText = number;
-        document.getElementById("result").innerText = message;
-    }, 1000);
-});
+var randomNumber = function(low, high) {
+    return Math.floor( Math.random() * (1 + high - low) ) + low;
+  };
+  
+  var cube = document.getElementById('cube');
+  var outcome = document.getElementById('outcome');
+  var outcomeText = document.getElementById('text');
+  var messageDelay; //timer
+  var fadeout; //timer
+  var messages = [
+    'Empório daruma',
+    'Café barão',
+    'Charlotte',
+    'Casa Bauducco BB',
+    'The coffee',
+    'Casa Bauducco Center 3',
+    'Kopenhagen center 3',
+    'Café Perseu',
+    'Urbe café',
+    'Café Gorinhamez',
+    'Café na SPTech :(',
+    'Café amigão',
+    'Café no MASP',
+    'Tostado Coffee Club',
+    'Café Cine Marquise',
+    'Café Cine Fellini',
+    'Cacau Show Conj. Nac.',
+    'Ofner Center 3',
+    'Rei do mate',
+    'Sterna Café Habitat Bra'
+  ];
+  
+  
+  var showFace = function() {
+  
+    var face = randomNumber( 1, 20 );
+  
+    //if not already at this number
+    if (cube.className !== 'show-' + face ) {
+  
+      cube.className = 'show-' + face;
+  
+      //delay for spin to finish
+      messageDelay = setTimeout( function() {
+  
+        //show message
+        outcomeText.innerHTML = messages[ face - 1 ];
+        outcome.className = 'show';
+  
+        //display message then fade out
+        fadeout = setTimeout( function() {
+  
+          //hide message
+          outcome.className = '';
+  
+        }, 2000);
+  
+      } , 1000);
+  
+    } else {
+      //repeat number, try again
+      return showFace();
+    }
+  
+  };
+  
+  
+  document.getElementById('roll').addEventListener( 'click', function() {
+  
+    //fade message
+    outcome.className = '';
+  
+    //clear timers if they are there
+    if ( typeof messageDelay === "number" ) {
+      clearTimeout( messageDelay );
+      clearTimeout( fadeout );
+    }
+  
+    showFace();
+  
+  }, false);
